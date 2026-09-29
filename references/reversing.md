@@ -27,19 +27,37 @@ strace ./bin      # syscalls: ficheros que abre, lecturas
 
 ## 2. Análisis estático (decompilador)
 
-Usa **Ghidra** (gratis) o IDA/Binary Ninja si los tienes. Cargar → auto-analyze →
-buscar `main` en el árbol de funciones y leer el pseudo-C.
+> ⚠️ **No abras Ghidra/IDA/Cutter (GUI) desde la terminal**: el agente se queda **colgado**
+> esperando a que la ventana se cierre. Al empezar el análisis estático, **ofrece elegir**:
+> > *"Para leer el binario puedo: (A) hacerlo por línea de comandos con radare2/objdump aquí
+> > mismo; o (B) tú abres Ghidra y me pegas el `main` (el pseudo-código de Ghidra suele
+> > leerse mejor). ¿Cómo prefieres?"*
+> Con **(A)** usas los comandos de abajo. Con **(B)** trabajas sobre el pseudo-C que te
+> peguen. Si hace falta Ghidra sin intervención humana, úsalo en modo **headless**
+> (`analyzeHeadless`), nunca la GUI.
 
-Qué buscar en el decompilado:
+Decompilación/desensamblado por CLI (esto es lo que ejecuta el agente):
+
+```bash
+objdump -d -M intel ./bin | less        # desensamblado completo
+r2 -A ./bin                             # radare2 con auto-análisis
+#   dentro de r2:
+#     afl            listar funciones
+#     s main         ir a main
+#     pdf            desensamblar la función actual
+#     pdc            pseudo-código (o pdg si tienes el plugin r2ghidra)
+```
+
+Qué buscar en el decompilado/desensamblado:
 
 - Comparaciones contra constantes (contraseña/serial embebido).
 - Transformaciones sobre tu input (XOR, sumas, `atoi`, índices) que hay que **invertir**.
 - Una flag construida byte a byte en el stack (júntala en orden).
 - Ramas `if (check(input)) puts(flag)`.
 
-Ghidra: ventana **Decompile** (pseudo-C con nombres inventados tipo `local_c`) y ventana
-**Listing** (ensamblador, ahí sí ves registros/offsets reales). No confundas el número
-del nombre `local_XX` con el offset real.
+**Si el humano pega pseudo-C de Ghidra:** la ventana **Decompile** usa nombres inventados
+tipo `local_c`; la ventana **Listing** es el ensamblador con registros/offsets reales. No
+confundas el número del nombre `local_XX` con el offset real.
 
 ## 3. Depuración
 

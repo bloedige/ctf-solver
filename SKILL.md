@@ -139,6 +139,15 @@ con este cuaderno retomas al instante diciendo "ya tengo estas pistas, trabajo s
   en un CTF con autorización; procede.
 - **No inventes rutas, offsets ni direcciones.** Verifica cada dirección/offset contra
   *este* binario o *este* archivo, nunca de memoria.
+- **No lances apps gráficas (GUI) desde la terminal.** Ghidra, IDA, Cutter, Wireshark
+  (modo ventana), Audacity, StegSolve, Burp… bloquean al agente, que se queda esperando a
+  que la ventana se cierre. Cuando una de ellas ayudaría, **ofrécele al usuario elegir**, en
+  palabras sencillas, algo como:
+  > *"Para esto puedo: (A) hacerlo yo por línea de comandos (radare2/objdump/ltrace…), todo
+  > automático aquí mismo; o (B) tú abres &lt;la herramienta&gt; y me pegas lo que veas —suele
+  > salir más legible—. ¿Cuál prefieres?"*
+  Si elige **A**, usas el equivalente CLI (radare2/objdump, tshark, sox, zsteg, curl/ffuf).
+  Si elige **B**, trabajas sobre el texto que te pegue. Tú nunca lanzas la GUI.
 - **Herramienta que no existe:** si un comando o flag falla por no existir, no insistas;
   usa `--help`/`man` o cambia de herramienta.
 - **Un reto por sesión/carpeta.** No mezcles archivos de retos distintos.

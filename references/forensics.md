@@ -19,6 +19,11 @@ binwalk -e <archivo>       # extrae a _<archivo>.extracted/
 foremost -i <archivo> -o out_foremost   # alternativa de carving
 ```
 
+Si `file`/`exiftool`/`binwalk` **no muestran nada** pero sospechas un payload oculto,
+comprueba entropía y datos tras el fin de archivo antes de rendirte:
+`binwalk -E <archivo>` (picos de entropía), `xxd <archivo> | tail` (datos tras EOF),
+`binwalk -Me` (recursivo) y `stegoveritas`. Detalle completo en `stego.md` (sección 0.5).
+
 ## 1. Capturas de red (.pcap / .pcapng)
 
 ```bash
